@@ -1,0 +1,100 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zsid-ele <zsid-ele@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/24 17:41:40 by zsid-ele          #+#    #+#             */
+/*   Updated: 2024/12/27 15:41:47 by zsid-ele         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "get_next_line.h"
+
+int	chicking(char *ho)
+{
+	if(!ho)
+		return 1;
+	int	i;
+
+	i = 0;
+	while (ho[i] != '\0')
+	{
+		if (ho[i] == '\n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+int	ft_strlen(char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
+char *ft_join(char *ho, char *llo)
+{
+	int	i;
+	int	j;
+	static char *str;
+
+	i = ft_strlen(ho);
+	i = ft_strlen(llo);
+	str = malloc(i + j + 1);
+	i = 0;
+	j = 0;
+	while (str[i] && ho[i])
+	{
+		str[i] = ho[i];
+		i++;
+	}
+	while (str[i] && llo[j])
+	{
+		str[i] = llo[j];
+		i++;
+		j++;
+	}
+	str[i] = '\0';
+		printf("%s",str);
+	return (str);
+}
+
+char	*get_next_line(int	fd)
+{
+	static char	*ho;
+	static char	*llo;
+	char *fin;
+	int			x;
+
+	ho = malloc(BUF + 1);
+	if (!ho)
+		return (NULL);
+	x = read (fd, ho, BUF);
+	if (x <= 0)
+		return (NULL);
+	while (chicking(ho) != 0)
+	{
+		llo = malloc (BUF + 1);
+		if(!llo)
+			return (NULL);
+		x = read(fd, llo, BUF);
+		if (x == 0)
+			return (ho);
+		fin = ft_join(ho,llo);
+		write (1,"76",2);
+	}
+	return (ho);
+}
+
+int main()
+{
+	int fd;
+	fd = open("zayed.txt",O_RDWR,666); 
+	printf("%s",get_next_line(fd));
+	return 0;
+}

@@ -1,107 +1,108 @@
+
 #include "get_next_line.h"
 
-// char	*get_calloc(int size)
-// {
-// 	int		i;
-// 	char	*ret;
+char	*get_calloc(int size)
+{
+	int		i;
+	char	*ret;
 
-// 	i = 0;
-// 	ret = malloc(size);
-// 	if (!ret)
-// 		return (NULL);
-// 	while (i < size)
-// 	{
-// 		ret[i] = '\0';
-// 		i++;
-// 	}
-// 	return (ret);
-// }
+	i = 0;
+	ret = malloc(size);
+	if (!ret)
+		return (NULL);
+	while (i < size)
+	{
+		ret[i] = '\0';
+		i++;
+	}
+	return (ret);
+}
 
-// void	small_void(char	*str, int key)
-// {
-// 	int	i;
+void	small_void(char	*str, int key)
+{
+	int	i;
 
-// 	if (key == 1)
-// 	{
-// 		i = 0;
-// 		if (!*str)
-// 			return ;
-// 		while (str[i])
-// 		{
-// 			str[i] = '\0';
-// 			i++;
-// 		}
-// 		return ;
-// 	}
-// 	if (key == 2)
-// 	{
-// 		if (!str)
-// 		{
-// 			str = NULL;
-// 			return ;
-// 		}
-// 		free(str);
-// 		str = NULL;
-// 	}
-// 	return ;
-// }
+	if (key == 1)
+	{
+		i = 0;
+		if (!*str)
+			return ;
+		while (str[i])
+		{
+			str[i] = '\0';
+			i++;
+		}
+		return ;
+	}
+	if (key == 2)
+	{
+		if (!str)
+		{
+			str = NULL;
+			return ;
+		}
+		free(str);
+		str = NULL;
+	}
+	return ;
+}
 
-// int	small(char *str, int key)
-// {
-// 	int	i;
+int	small(char *str, int key)
+{
+	int	i;
 
-// 	i = 0;
-// 	if (key == 1)
-// 	{
-// 		if (!str)
-// 			return (0);
-// 		while (str[i])
-// 			i++;
-// 		return (i);
-// 	}
-// 	if (key == 2)
-// 	{
-// 		if (!str)
-// 			return (0);
-// 		while (str[i])
-// 		{
-// 			if (str[i] == '\n')
-// 				return (1);
-// 			i++;
-// 		}
-// 		return (0);
-// 	}
-// 	return (0);
-// }
+	i = 0;
+	if (key == 1)
+	{
+		if (!str)
+			return (0);
+		while (str[i])
+			i++;
+		return (i);
+	}
+	if (key == 2)
+	{
+		if (!str)
+			return (0);
+		while (str[i])
+		{
+			if (str[i] == '\n')
+				return (1);
+			i++;
+		}
+		return (0);
+	}
+	return (0);
+}
 
-// char	*get_join(char	*s1, char *s2)
-// {
-// 	int		sl1;
-// 	int		sl2;
-// 	char	*ret;
-// 	int		i;
-// 	int		j;
+char	*get_join(char	*s1, char *s2)
+{
+	int		sl1;
+	int		sl2;
+	char	*ret;
+	int		i;
+	int		j;
 
-// 	i = 0;
-// 	j = 0;
-// 	sl1 = small(s1, 1);
-// 	sl2 = small(s2, 1);
-// 	ret = get_calloc(sl1 + sl2 + 1);
-// 	if (!ret)
-// 		return (NULL);
-// 	while (sl1 > i)
-// 	{
-// 		ret[i] = s1[i];
-// 		i++;
-// 	}
-// 	while (sl2 > j)
-// 	{
-// 		ret[i + j] = s2[j];
-// 		j++;
-// 	}
-// 	ret[i + j] = '\0';
-// 	return (ret);
-// }
+	i = 0;
+	j = 0;
+	sl1 = small(s1, 1);
+	sl2 = small(s2, 1);
+	ret = get_calloc(sl1 + sl2 + 1);
+	if (!ret)
+		return (NULL);
+	while (sl1 > i)
+	{
+		ret[i] = s1[i];
+		i++;
+	}
+	while (sl2 > j)
+	{
+		ret[i + j] = s2[j];
+		j++;
+	}
+	ret[i + j] = '\0';
+	return (ret);
+}
 
 char	*get_newline(char *keep, int fd, int bytes)
 {
@@ -125,7 +126,7 @@ char	*get_newline(char *keep, int fd, int bytes)
 		small_void(freed, 2);
 		freed = ret;
 	}
-	// small_void(keep, 2);
+	small_void(keep, 2);
 	return (ret);
 }
 
@@ -237,8 +238,9 @@ int	main()
 	while ((str = get_next_line(fd)) != NULL)
 	{
 		printf("--%s\n", str);
-		free(str);
+		// free(str);
 	}
 	close(fd);
 	return (0);
 }
+

@@ -1,128 +1,178 @@
 #include "get_next_line.h"
 
-void	get_bzero(char *ret)
-{
-	int	i;
+// char	*get_calloc(int size)
+// {
+// 	int		i;
+// 	char	*ret;
 
-	i = 0;
-	if (!*ret)
-		return ;
+// 	i = 0;
+// 	ret = malloc(size);
+// 	if (!ret)
+// 		return (NULL);
+// 	while (i < size)
+// 	{
+// 		ret[i] = '\0';
+// 		i++;
+// 	}
+// 	return (ret);
+// }
+
+// void	small_void(char	*str, int key)
+// {
+// 	int	i;
+
+// 	if (key == 1)
+// 	{
+// 		i = 0;
+// 		if (!*str)
+// 			return ;
+// 		while (str[i])
+// 		{
+// 			str[i] = '\0';
+// 			i++;
+// 		}
+// 		return ;
+// 	}
+// 	if (key == 2)
+// 	{
+// 		if (!str)
+// 		{
+// 			str = NULL;
+// 			return ;
+// 		}
+// 		free(str);
+// 		str = NULL;
+// 	}
+// 	return ;
+// }
+
+// int	small(char *str, int key)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	if (key == 1)
+// 	{
+// 		if (!str)
+// 			return (0);
+// 		while (str[i])
+// 			i++;
+// 		return (i);
+// 	}
+// 	if (key == 2)
+// 	{
+// 		if (!str)
+// 			return (0);
+// 		while (str[i])
+// 		{
+// 			if (str[i] == '\n')
+// 				return (1);
+// 			i++;
+// 		}
+// 		return (0);
+// 	}
+// 	return (0);
+// }
+
+// char	*get_join(char	*s1, char *s2)
+// {
+// 	int		sl1;
+// 	int		sl2;
+// 	char	*ret;
+// 	int		i;
+// 	int		j;
+
+// 	i = 0;
+// 	j = 0;
+// 	sl1 = small(s1, 1);
+// 	sl2 = small(s2, 1);
+// 	ret = get_calloc(sl1 + sl2 + 1);
+// 	if (!ret)
+// 		return (NULL);
+// 	while (sl1 > i)
+// 	{
+// 		ret[i] = s1[i];
+// 		i++;
+// 	}
+// 	while (sl2 > j)
+// 	{
+// 		ret[i + j] = s2[j];
+// 		j++;
+// 	}
+// 	ret[i + j] = '\0';
+// 	return (ret);
+// }
+
+char	*get_newline(char *keep, int fd, int bytes)
+{
+	char	*ret;
+	char	*freed;
+
+	ret = get_join(keep, NULL);
+	if (small(ret, 2) == 1)
+		return (small_void(keep, 2), ret);
+	freed = ret;
+	small_void(keep, 1);
+	while (small(ret, 2) == 0 && bytes > 0)
+	{
+		bytes = read(fd, keep, BUFFER_SIZE);
+		if (bytes <= 0)
+			return (small_void(keep, 2), ret);
+		ret = get_join(ret, keep);
+		if (!ret)
+			return (small_void(ret, 2), small_void(keep, 2), NULL);
+		small_void(keep, 1);
+		small_void(freed, 2);
+		freed = ret;
+	}
+	// small_void(keep, 2);
+	return (ret);
+}
+
+char	*get_the_keep(char	*ret, int i, int len)
+{
+	int		j;
+	char	*keep;
+
+	j = 0;
+	while (ret[i] && ret[i] != '\n')
+		i++;
+	i++;
+	keep = get_calloc(len + 1);
+	if (!keep)
+		return (NULL);
 	while (ret[i])
 	{
-		ret[i] = '\0';
+		keep[j] = ret[i];
 		i++;
-	}
-}
-
-void	freeing(char	*freed)
-{
-	if (!freed)
-	{
-		freed = NULL;
-	}
-	free(freed);
-	freed = NULL;
-	return ;
-}
-
-char	*get_calloc(int size)
-{
-	int		i;
-	char	*ret;
-
-	i = 0;
-	ret = malloc(size);
-	if (!ret)
-		return (NULL);
-	while (i < size)
-	{
-		ret[i] = '\0';
-		i++;
-	}
-	return (ret);
-}
-
-int	small(char *str, int key)
-{
-	int	i;
-
-	if (key == 1)
-	{
-		i = 0;
-		if (!str)
-			return (0);
-		while (str[i])
-			i++;
-		return (i);
-	}
-	if (key == 2)
-	{
-		i = 0;
-		if (!str)
-			return (0);
-		while (str[i])
-		{
-			if (str[i] == '\n')
-				return (1);
-			i++;
-		}
-		return (0);
-	}
-	return (0);
-}
-
-char	*get_join(char	*s1, char *s2)
-{
-	int		sl1;
-	int		sl2;
-	char	*ret;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	sl1 = small(s1, 1);
-	sl2 = small(s2, 1);
-	ret = get_calloc(sl1 + sl2 + 1);
-	if (!ret)
-		return (NULL);
-	while (sl1 > i)
-	{
-		ret[i] = s1[i];
-		i++;
-	}
-	while (sl2 > j)
-	{
-		ret[i + j] = s2[j];
 		j++;
 	}
-	return (ret);
+	keep[j] = '\0';
+	return (keep);
 }
 
-char	*get_keep(char	*oldkeep)
+char	*get_keep(char	*ret)
 {
 	int		i;
-	int		j;
-	char	*ret;
+	int		len;
+	char	*keep;
 
 	i = 0;
-	j = 0;
-	ret = NULL;
-	while (oldkeep[i] != '\n' && oldkeep[i])
+	len = 0;
+	while (ret[i] && ret[i] != '\n')
 		i++;
-	if (oldkeep[i] == '\n')
+	if (ret[i] != '\n')
+		return (NULL);
+	if (ret[i] == '\n' && ret[i + 1] == '\0')
+		return (NULL);
+	i++;
+	while (ret[i])
 	{
 		i++;
-		ret = get_calloc(BUFFER_SIZE + 1);
-		if (!ret)
-			return (freeing(oldkeep), NULL);
-		while (oldkeep[i])
-		{
-			ret[j] = oldkeep[i];
-			j++;
-			i++;
-		}
+		len++;
 	}
+	i = 0;
+	ret = get_the_keep(ret, i, len);
 	return (ret);
 }
 
@@ -138,7 +188,7 @@ char	*ft_strchr(char	*str, char c)
 	j = 0;
 	while (str[i] && str[i] != c)
 		i++;
-	ret = malloc(i + 1);
+	ret = get_calloc(i + 1 + 1);
 	if (!ret)
 		return (NULL);
 	while (j <= i)
@@ -146,61 +196,19 @@ char	*ft_strchr(char	*str, char c)
 		ret[j] = str[j];
 		j++;
 	}
+	ret[j] = '\0';
 	return (ret);
-}
-
-int	line_without_read(char **ret, char **keep, int fd)
-{
-	char	*oldret;
-	char	*oldkeep;
-	int		i;
-	int		j;
-
-	j = 0;
-	i = 0;
-	oldret = *ret;
-	oldkeep = *keep;
-	*ret = ft_strchr(*keep, '\n');
-	if (!ret)
-		return (freeing(*ret), 0);
-	freeing(oldret);
-	*keep = get_keep(*keep);
-	freeing(oldkeep);
-	return (0);
-}
-
-int	read_line(char **ret, char **keep, int fd)
-{
-	int		bytes;
-	char	*oldret;
-	char	*oldkeep;
-
-	bytes = 1;
-	oldret = *ret;
-	while (bytes > 0 && small(*keep, 2) == 0)
-	{
-		oldkeep = *keep;
-		oldret = *ret;
-		get_bzero(*ret);
-		bytes = read(fd, *ret, BUFFER_SIZE);
-		*keep = get_join(*keep, *ret);
-		if (!keep)
-			return (freeing(oldkeep), freeing(oldret), 0);
-		freeing(oldkeep);
-	}
-	oldkeep = *keep;
-	*ret = ft_strchr(*keep, '\n');
-	*keep = get_keep(*keep);
-	return (freeing(oldret), 0);
 }
 
 char	*get_next_line(int fd)
 {
 	static char	*keep;
 	char		*ret;
+	char		*line;
 	int			bytes;
 
-	if (fd < 0 || BUFFER_SIZE == 0)
+	bytes = 0;
+	if (fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE == 0)
 		return (NULL);
 	if (!keep)
 	{
@@ -209,58 +217,28 @@ char	*get_next_line(int fd)
 			return (NULL);
 		bytes = read(fd, keep, BUFFER_SIZE);
 		if (bytes <= 0)
-			return (freeing(keep), NULL);
+			return (small_void(keep, 2), NULL);
 	}
-	if (!keep)
-		return (NULL);
-	ret = get_calloc(BUFFER_SIZE + 1);
-	if (!ret)
-		return (freeing(keep), NULL);
-	if (keep && small(keep, 2) == 1)
-		bytes = line_without_read(&ret, &keep, fd);
-	else
-		bytes = read_line(&ret, &keep, fd);
-	return (ret);
+	ret = get_newline(keep, fd, bytes);
+	// if (small(ret, 2) == 0)
+	// 	str_cpy; 
+	keep = get_keep(ret);
+	line = ft_strchr(ret, '\n');
+	small_void(ret, 2);
+	return (line);
 }
 
-// int	main()
-// {
-// 	char 	*str;
-// 	int fd;
-// 	int i;
 
-// 	i = 9;
-// 	fd = open("f.txt", O_RDWR, 0666);
-// 	while ((str = get_next_line(fd)) != NULL)
-// 	{
-// 		printf("--%s", str);
-// 		free(str);
-// 		i--;
-// 	}
-// 	close(fd);
-// 	return (0);
-// }
-
-// int	main()
-// {
-// 	char 	*ret;
-// 	char	*keep;
-
-// 	ret = get_calloc(BUFFER_SIZE + 1);
-// 	keep = get_calloc(BUFFER_SIZE + 1);
-// 	keep[0] = 'i';
-// 		keep[1] = 'i';
-// 			keep[2] = 'i';
-// 				keep[3] = '\n';
-// 					keep[4] = 'i';
-// 						keep[5] = '\0';
-// 	int fd;
-// 	int i;
-// 	fd = open("f.txt", O_RDWR, 0666);
-// 	// while ((str = get_next_line(fd)) != NULL)
-// 	// {
-// 		i = line_without_read(&ret, &keep, fd);
-// 		// printf("%s\n----,%s", ret, keep);
-// 		free(ret);
-// 	return (0);
-// }
+int	main()
+{
+	char 	*str;
+	int fd;
+	fd = open("f.txt", O_RDWR, 0666);
+	while ((str = get_next_line(fd)) != NULL)
+	{
+		printf("--%s\n", str);
+		free(str);
+	}
+	close(fd);
+	return (0);
+}

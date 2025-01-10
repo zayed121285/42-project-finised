@@ -110,11 +110,13 @@ char	*get_newline(char *keep, int fd, int bytes)
 	char	*freed;
 
 	ret = get_join(keep, NULL);
-	if (small(ret, 2) == 1)
+	small_void(keep, 2);
+	keep = get_calloc(BUFFER_SIZE + 1);
+	if (small(keep, 2) == 1)
 		return (small_void(keep, 2), ret);
 	freed = ret;
 	small_void(keep, 1);
-	while (small(ret, 2) == 0 && bytes > 0)
+	while (small(keep, 2) == 0 && bytes > 0)
 	{
 		bytes = read(fd, keep, BUFFER_SIZE);
 		if (bytes <= 0)
@@ -156,7 +158,6 @@ char	*get_keep(char	*ret)
 {
 	int		i;
 	int		len;
-	char	*keep;
 
 	i = 0;
 	len = 0;
@@ -221,8 +222,6 @@ char	*get_next_line(int fd)
 			return (small_void(keep, 2), NULL);
 	}
 	ret = get_newline(keep, fd, bytes);
-	// if (small(ret, 2) == 0)
-	// 	str_cpy; 
 	keep = get_keep(ret);
 	line = ft_strchr(ret, '\n');
 	small_void(ret, 2);
@@ -238,9 +237,8 @@ int	main()
 	while ((str = get_next_line(fd)) != NULL)
 	{
 		printf("--%s\n", str);
-		// free(str);
+		free(str);
 	}
 	close(fd);
 	return (0);
 }
-

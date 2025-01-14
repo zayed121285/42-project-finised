@@ -1,0 +1,27 @@
+int	ft_printf(const char *str, ...)
+{
+	va_list	list;
+	int		is_empty;
+	int		ret_val;
+
+	ret_val = 0;
+	va_start(list, str);
+	while (*str)
+	{
+		if (*str == '%')
+		{
+			is_empty = 0;
+			while (*(++str) == 32)
+				is_empty = 1;
+			if (is_empty)
+				ft_putchar(' ', &ret_val);
+			if (ft_controller(*str, list, &ret_val) != 0)
+				ret_val += write(1, str, 1);
+		}
+		else
+			ret_val += write(1, str, 1);
+		str++;
+	}
+	va_end(list);
+	return (ret_val);
+}
